@@ -1,0 +1,11 @@
+--- ./share/applications/kitty-open.desktop	2024-06-21 22:38:54.756000000 -0500
++++ ./share/applications/net.kovidgoyal.kitty-open.desktop	2024-07-28 16:41:35.432783400 -0500
+@@ -7,7 +7,7 @@
+ StartupNotify=true
+ TryExec=kitty
+ Exec=kitty +open %U
+-Icon=kitty
++Icon=net.kovidgoyal.kitty
+ Categories=System;TerminalEmulator;
+ NoDisplay=true
+ MimeType=image/*;application/x-sh;application/x-shellscript;inode/directory;text/*;x-scheme-handler/kitty;x-scheme-handler/ssh;

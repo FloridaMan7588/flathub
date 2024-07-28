@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>net.kovidgoyal.kitty</id>
+
+    <name>kitty</name>
+    <summary>Feature-Rich Terminal Emulator</summary>
+
+    <developer id="net.kovidgoyal">
+        <name>Kovid Goyal &amp; Kitty Contributors</name>
+    </developer>
+
+    <metadata_license>MIT</metadata_license>
+    <project_license>GPL-3.0-only</project_license>
+    <content_rating type="oars-1.0" />
+
+
+    <description>
+        <p>
+            Kitty is a fast, GPU accelerated terminal emulator designed to work across POSIX
+            compliant operating systems. Kitty provides a rich feature set and many customization
+            and configuration options allowing for high productivity.
+        </p>
+    </description>
+
+    <launchable type="desktop-id">net.kovidgoyal.kitty.desktop</launchable>
+    <launchable type="desktop-id">net.kovidgoyal.open-kitty.desktop</launchable>
+
+    <url type="homepage">https://sw.kovidgoyal.net/kitty/</url>
+    <url type="bugtracker">https://github.com/floridaman7588/flathub</url>
+    <url type="vcs-browser">https://github.com/kovidgoyal/kitty</url>
+
+    <screenshots>
+        <screenshot type="default">
+            <image>
+                https://github.com/FloridaMan7588/flathub/tree/net.kovidgoyal.kitty/screenshots/primary.png</image>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://github.com/FloridaMan7588/flathub/tree/net.kovidgoyal.kitty/screenshots/neofetch.png</image>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://github.com/FloridaMan7588/flathub/tree/net.kovidgoyal.kitty/screenshots/multiterm.png</image>
+        </screenshot>
+    </screenshots>
+</component>

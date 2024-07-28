@@ -8,30 +8,47 @@ finish-args:
   - --socket=fallback-x11
   - --socket=wayland
   - --device=all
+  # Application is a terminal emulator, so it needs access to the flatpak talk
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=org.freedesktop.Notifications
 command: kitty
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.golang
 modules:
   - name: kitty
     buildsystem: simple
-    build-options:
-      build-args:
-        - --share=network
     build-commands:
-      - mkdir -p /app/bin
-      - ln -sf /usr/lib/sdk/golang/bin/go /app/bin/go
-      - ./dev.sh build
-      - rm /app/bin/go
-      - mv ./kitty/launcher/kitty /app/bin/kitty
+      - mkdir -p /app/lib
+      - install -Dm755 ./bin/kitty /app/bin/kitty
+      - install -Dm755 ./bin/kitten /app/bin/kitten
+      - mv ./share/applications/kitty.desktop ./share/applications/net.kovidgoyal.kitty.desktop
+      - mv ./share/applications/kitty-open.desktop ./share/applications/net.kovidgoyal.kitty-open.desktop
+      - desktop-file-install --dir /app/share/applications ./share/applications/net.kovidgoyal.kitty.desktop ./share/applications/net.kovidgoyal.kitty-open.desktop
+      - install -Dm644 ./net.kovidgoyal.kitty.metainfo.xml /app/share/metainfo/net.kovidgoyal.kitty.metainfo.xml
+      - install -Dm644 ./share/icons/hicolor/256x256/apps/kitty.png /app/share/icons/hicolor/256x256/apps/net.kovidgoyal.kitty.png
+      - install -Dm644 ./share/icons/hicolor/scalable/apps/kitty.svg /app/share/icons/hicolor/scalable/apps/net.kovidgoyal.kitty.svg
+      - install -Dm755 ./share/terminfo/x/xterm-kitty /app/share/terminfo/x/xterm-kitty
+      - mv ./lib/* /app/lib
     sources:
       - type: archive
-        url: https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.35.2.zip
-        sha256: ea957a07df437c1eb57fc41218b08b8de34c58a7bda9d7307a8e666f3185edc4
-        x-checker-data:
-          type: json
-          url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
-          tag-query: .tag_name
-          version-query: .tag_name
-          timestamp-query: .published_at
+        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-x86_64.txz
+        sha256: a49bb1ecd05495178a50958960a6377db6bbbfbe647b5c5ecae9bd14ded93acc
+        strip-components: 0
+        only-arches:
+          - x86_64
+      - type: archive
+        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-arm64.txz
+        sha256: 8d7fbaa80ab4a9a84e88b9df2e0429fa5b6a2467f67afa66570d2cfa7dc273fa
+        strip-components: 0
+        only-arches:
+          - aarch64
+      - type: archive
+        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-i686.txz
+        sha256: 6b9a5be4a308b68e34511a88d49693c8cfe7c9bb7bf7c6561090e540f4f81621
+        strip-components: 0
+        only-arches:
+          - i686
+      - type: file
+        path: net.kovidgoyal.kitty.metainfo.xml
+      - type: patch
+        path: patches/desktop-icon.patch
+      - type: patch
+        path: patches/open-desktop-icon.patch
