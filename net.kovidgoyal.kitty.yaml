@@ -1,0 +1,37 @@
+id: net.kovidgoyal.kitty
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+finish-args:
+  - --filesystem=host
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=all
+  - --talk-name=org.freedesktop.Flatpak
+  - --talk-name=org.freedesktop.Notifications
+command: kitty
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.golang
+modules:
+  - name: kitty
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - mkdir -p /app/bin
+      - ln -sf /usr/lib/sdk/golang/bin/go /app/bin/go
+      - ./dev.sh build
+      - rm /app/bin/go
+      - mv ./kitty/launcher/kitty /app/bin/kitty
+    sources:
+      - type: archive
+        url: https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.35.2.zip
+        sha256: ea957a07df437c1eb57fc41218b08b8de34c58a7bda9d7307a8e666f3185edc4
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
+          tag-query: .tag_name
+          version-query: .tag_name
+          timestamp-query: .published_at
