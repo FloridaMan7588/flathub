@@ -12,43 +12,37 @@ finish-args:
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=org.freedesktop.Notifications
 command: kitty
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.golang
+
 modules:
   - name: kitty
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+      append-path: /usr/lib/sdk/golang/bin
+      env:
+        GOBIN: /app/bin
+        GOROOT: /usr/lib/sdk/golang
+        DESTDIR: /app
     build-commands:
-      - mkdir -p /app/lib
-      - install -Dm755 ./bin/kitty /app/bin/kitty
-      - install -Dm755 ./bin/kitten /app/bin/kitten
-      - mv ./share/applications/kitty.desktop ./share/applications/net.kovidgoyal.kitty.desktop
-      - mv ./share/applications/kitty-open.desktop ./share/applications/net.kovidgoyal.kitty-open.desktop
-      - desktop-file-install --dir /app/share/applications ./share/applications/net.kovidgoyal.kitty.desktop ./share/applications/net.kovidgoyal.kitty-open.desktop
+      # The bundled build script must be used to build, other methods are unsupported
+      - ./dev.sh build
+      - install -Dm755 ./kitty/launcher/kitty $DESTDIR/bin/kitty
+      - install -Dm755 ./kitty/launcher/kitten $DESTDIR/bin/kitten
+      - install -Dm644 ./logo/kitty.png $DESTDIR/share/icons/hicolor/256x256/apps/net.kovidgoyal.kitty.png
+      - install -Dm644 ./logo/kitty.svg $DESTDIR/share/icons/hicolor/scalable/apps/net.kovidgoyal.kitty.svg
       - install -Dm644 ./net.kovidgoyal.kitty.metainfo.xml /app/share/metainfo/net.kovidgoyal.kitty.metainfo.xml
-      - install -Dm644 ./share/icons/hicolor/256x256/apps/kitty.png /app/share/icons/hicolor/256x256/apps/net.kovidgoyal.kitty.png
-      - install -Dm644 ./share/icons/hicolor/scalable/apps/kitty.svg /app/share/icons/hicolor/scalable/apps/net.kovidgoyal.kitty.svg
-      - install -Dm755 ./share/terminfo/x/xterm-kitty /app/share/terminfo/x/xterm-kitty
-      - mv ./lib/* /app/lib
+      - install -Dm644 ./terminfo/x/xterm-kitty $DESTDIR/share/terminfo/x/xterm-kitty
+      - desktop-file-install --dir=$DESTDIR/share/applications ./net.kovidgoyal.kitty.desktop ./net.kovidgoyal.kitty-open.desktop
     sources:
       - type: archive
-        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-x86_64.txz
-        sha256: a49bb1ecd05495178a50958960a6377db6bbbfbe647b5c5ecae9bd14ded93acc
-        strip-components: 0
-        only-arches:
-          - x86_64
-      - type: archive
-        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-arm64.txz
-        sha256: 8d7fbaa80ab4a9a84e88b9df2e0429fa5b6a2467f67afa66570d2cfa7dc273fa
-        strip-components: 0
-        only-arches:
-          - aarch64
-      - type: archive
-        url: https://github.com/kovidgoyal/kitty/releases/download/v0.35.2/kitty-0.35.2-i686.txz
-        sha256: 6b9a5be4a308b68e34511a88d49693c8cfe7c9bb7bf7c6561090e540f4f81621
-        strip-components: 0
-        only-arches:
-          - i686
+        url: https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.35.2.tar.gz
+        sha256: 35ecf63999a056ff691abab94a6f82328f4e432c8e229a69d02c25466be4398f
       - type: file
         path: net.kovidgoyal.kitty.metainfo.xml
-      - type: patch
-        path: patches/desktop-icon.patch
-      - type: patch
-        path: patches/open-desktop-icon.patch
+      - type: file
+        path: net.kovidgoyal.kitty.desktop
+      - type: file
+        path: net.kovidgoyal.kitty-open.desktop
