@@ -27,6 +27,7 @@ modules:
         GOROOT: /usr/lib/sdk/golang
         DESTDIR: /app
     build-commands:
+      - mkdir -p $DESTDIR/lib
       # The bundled build script must be used to build, other methods are unsupported
       - ./dev.sh build
       - install -Dm755 ./kitty/launcher/kitty $DESTDIR/bin/kitty
@@ -36,6 +37,7 @@ modules:
       - install -Dm644 ./net.kovidgoyal.kitty.metainfo.xml /app/share/metainfo/net.kovidgoyal.kitty.metainfo.xml
       - install -Dm644 ./terminfo/x/xterm-kitty $DESTDIR/share/terminfo/x/xterm-kitty
       - desktop-file-install --dir=$DESTDIR/share/applications ./net.kovidgoyal.kitty.desktop ./net.kovidgoyal.kitty-open.desktop
+      - mv ./dependencies/linux-*/lib/* $DESTDIR/lib
     sources:
       - type: archive
         url: https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.35.2.tar.gz
